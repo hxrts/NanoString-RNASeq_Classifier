@@ -29,6 +29,7 @@ batch=list()
 for (i in 1:length(folders)) {
 	folder=folders[i]
     load(file=paste(folder,"/Stage1Result.D",sep=""))
+    file.remove(file=paste(folder,"/Stage1Result.D",sep=""))
 	batch[[i]]=Stage1Result
 }
 
@@ -132,7 +133,7 @@ for (i in 1:ncol(D)) {
 }
 time_consumed<-proc.time()-start
 Stage2Results=list(res=res,D=D,R=R,DC=DC,Samples=Samples, Stems=Stems, probes=probes)
-save(Stage2Results,file=paste(outFolder,"Stage2Results.D",sep=""))
+save(Stage2Results,file=paste("Stage2Results.D",sep=""))
 
 data.frame(Samples=colnames(D),ex30=res[[1]]$VA$vec$ex30,evii=res[[1]]$VA$vec$evii,eviii=res[[1]]$VA$vec$eviii,ekd=res[[1]]$VA$vec$ekd,pkd=res[[1]]$VA$vec$pkd,pd89=res[[1]]$VA$vec$pd89)->VA
 write.csv(VA,file="bin/VA.csv")
