@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+ 	<title>NanoString Report Sample <!--rinline I(corename) --></title>
+</head>
+<body>
+
+
+	<H1>
+		MSKCC Brain Tumor Center
+	</H1>
+
+
+	<H2>
+		Summary Table
+	</H2>
+	<!--begin.rcode summary-table, fig.align='left', results='asis', echo=FALSE
+		library(knitr)
+		library(xtable)
+		print(xtable(BT),type='html')
+	end.rcode-->
+
+
+	<H2>
+		Quality Control
+	</H2>
+	<!--begin.rcode quality-control, message=FALSE, fig.align='left', echo=FALSE, fig.path=figPath
+		cm=res[[i]]$QC$cm
+		plot(density(cm))
+		abline(v=cm[i],col=4)#col (color)
+		abline(v=1000,col=2)#cut off line in red
+	end.rcode-->
+
+
+	<H2>
+		Detailed Table
+	</H2>
+	<!--begin.rcode detailed-table, fig.align='left', results='asis', echo=FALSE
+		print(xtable(VcfT),type='html')
+	end.rcode-->
+
+
+	<H2>
+		Cancer Gene Plots
+	</H2>
+	<!--begin.rcode cancer-gene-plots, message=FALSE, fig.align='left', fig.height=12, fig.width=12, warning=FALSE, echo=FALSE, fig.path=figPath
+		par(mar=c(2,2,2,2),mfrow=c(4,4)) # cancer gene plots
+		j=1
+    	for (gg in gset) {
+			v=na.omit(as.numeric(CGE[,j]))
+			plot(density(v),main=gg)
+		 	abline(v=cgCF[j],col=2)
+		 	abline(v=as.numeric(CGE_self[j]),col=4)
+			mtext(round(cgCF[j],2),side=4,col=2)
+        	j=j+1	
+		}
+	end.rcode-->
+
+
+	<H2>
+		EGFR & PDGFRa mutations
+	</H2>
+	<!--begin.rcode EGFR-PDGFRa-mutations, message=FALSE, fig.align='left', fig.height=10, fig.width=10, echo=FALSE, fig.path=figPath
+		par(mar=c(5,4,4,4),mfrow=c(2,2))
+		plot(log10(ekd),log10(eviii),pch=16,col=8,main="EGFRvIII",xlab="EGFR kinase domain", ylab="EGFRvIII")
+		for (m in 1:ncol(D)) {
+			if (is.finite(ekd[m]+eviii[m])) {
+				points(log10(ekd[m]),log10(eviii[m]),pch=16,cex=0.75,col=color[m,1])
+			} else {next}
+		}
+		points(log10(ekd[i]),log10(eviii[i]),pch=16,cex=2.5,col=4)
+		abline(v=log10(ekd[i]) ,h=log10(eviii[i]) , col=8)		
+		plot(log10(ekd),log10(evii),pch=16,col=8,main="EGFRvII",xlab="EGFR kinase domain", ylab="EGFRvII")
+		for (m in 1:ncol(D)) {
+			if (is.finite(ekd[m]+evii[m])) {
+				points(log10(ekd[m]),log10(evii[m]),pch=16,cex=0.75,col=color[m,2])
+			} else {next}
+		}
+		points(log10(ekd[i]),log10(evii[i]),pch=16,cex=2.5,col=4)
+		abline(v=log10(ekd[i]) ,h=log10(evii[i]) , col=8)
+
+		plot(log10(ekd),log10(ex30),pch=16,col=8,main="EGFR C-term",xlab="EGFR kinase domain", ylab="EGFR C-term")
+		for (m in 1:ncol(D)) {
+			if (is.finite(ekd[m]+ex30[m])) {
+				points(log10(ekd[m]),log10(ex30[m]),pch=16,cex=0.75,col=color[m,3])
+			} else {next}
+		}
+		points(log10(ekd[i]),log10(ex30[i]),pch=16,cex=2.5,col=4)
+		abline(v=log10(ekd[i]) ,h=log10(ex30[i]) , col=8)				
+		         	
+		plot(log10(pkd),log10(pd89),pch=16,col=8,main="PDGFRAD8,9",xlab="PDGFRA kinase domain", ylab="PDGFRAD8,9")
+		for (m in 1:ncol(D)) {
+			if (is.finite(pkd[m]+pd89[m])) {
+				points(log10(pkd[m]),log10(pd89[m]),pch=16,cex=0.75,col=color[m,4])
+			} else {next}
+		}
+		points(log10(pkd[i]),log10(pd89[i]),pch=16,cex=2.5,col=4)
+		abline(v=log10(pkd[i]) ,h=log10(pd89[i]) , col=8)
+	end.rcode-->
+
+
+	<H2>
+		Transcriptome Report
+	</H2>
+	<!--begin.rcode Transcriptome-Report-1, message=FALSE, fig.align='left', fig.height=10, fig.width=10, warning=FALSE, echo=FALSE, fig.path=figPath
+		library(shape)
+		par(mar=c(6,6,4,2),mfrow=c(1,1))
+		ccol=TCGACentroidCol
+		v1=res[[i]]$TX$TCGA$v1
+		v2=res[[i]]$TX$TCGA$v2
+		csample=res[[i]]$TX$TCGA$csample
+		cd=res[[i]]$TX$TCGA$cd	
+		plot(v1,v2,pch=1,col=c(csample,ccol),ylim=range(v2,-1,1,na.rm=T),xlab="Proneural <--> Mesenchymal", ylab="Neural <--> Classical", main="Transcriptome vs. Primary GBM (TCGA)")
+		points(xx<-v1[1],yy<-v2[1],pch=16,cex=2,col=csample[i])
+		abline(h=yy,v=xx,col=8)
+		plotellipse(cd[1]+cd[2], cd[3]+cd[4],mid=c(xx,yy),lwd=2,lcol=8)
+	end.rcode-->
+	<footnote{1(black) Neural 2(red) Classical 3(green) Mesenchymal 4 (blue) Proneural>
+
+
+	<!--begin.rcode Transcriptome-Report-2, message=FALSE, fig.align='left', fig.height=10, fig.width=10, warning=FALSE, echo=FALSE, fig.path=figPath
+        par(mar=c(6,6,4,2), mfrow=c(1,1))
+        ccol=TCGACentroidCol
+		v1=unlist(V1)
+		v2=unlist(V2)
+		csample=unlist(Csamples)
+        plot(v1,v2,pch=1,col=c(csample,ccol),ylim=range(v2,-1,1,na.rm=T), 
+		xlab="Proneural <--> Mesenchymal", ylab="Neural <--> Classical", main="TCGA Correlated BTC Cohort")
+        points(xx<-v1[i],yy<-v2[i],pch=16,cex=2,col=csample[i])
+        abline(h=yy,v=xx,col=8)
+        plotellipse(cd[1]+cd[2], cd[3]+cd[4],mid=c(xx,yy),lwd=2,lcol=8)
+	end.rcode-->
+	<footnote{1(black) Neural 2(red) Classical 3(green) Mesenchymal 4 (blue) Proneural>
+
+
+</body>
+</html>
